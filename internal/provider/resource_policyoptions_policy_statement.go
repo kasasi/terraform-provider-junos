@@ -983,7 +983,7 @@ func (policyoptionsPolicyStatementBlockThen) attributesSchema() map[string]schem
 			Optional:    true,
 			Description: "Type of load balancing in forwarding table.",
 			Validators: []validator.String{
-				stringvalidator.OneOf("per-packet", "consistent-hash"),
+				stringvalidator.OneOf("per-packet", "consistent-hash", "per-flow"),
 			},
 		},
 		"next": schema.StringAttribute{
