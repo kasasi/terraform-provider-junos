@@ -238,7 +238,7 @@ The following arguments are supported:
   Need to be `accept` or `reject`.
 - **load_balance** (Optional, String)  
   Type of load balancing in forwarding table.  
-  Need to be `per-packet` or `consistent-hash`.
+  Need to be `per-packet`, `per-flow` or `consistent-hash`.
 - **local_preference** (Optional, Block)  
   Declare local-preference action.
   - **action** (Required, String)  
