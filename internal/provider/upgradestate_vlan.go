@@ -70,7 +70,7 @@ func (rsc *vlan) UpgradeState(_ context.Context) map[int64]resource.StateUpgrade
 								},
 								"decapsulate_accept_inner_vlan": schema.BoolAttribute{
 									Optional: true,
-								}
+								},
 								"encapsulate_inner_vlan": schema.BoolAttribute{
 									Optional: true,
 								},
