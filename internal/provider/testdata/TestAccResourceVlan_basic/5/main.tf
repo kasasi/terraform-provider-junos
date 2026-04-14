@@ -58,11 +58,12 @@ resource "junos_vlan" "testacc_vlan_vxlan" {
   name    = "testacc_vlan_vxlan"
   vlan_id = 1020
   vxlan {
-    vni                          = 102010
-    vni_extend_evpn              = true
-    encapsulate_inner_vlan       = true
-    ingress_node_replication     = true
-    unreachable_vtep_aging_timer = 900
+    vni                           = 102010
+    vni_extend_evpn               = true
+    decapsulate_accept_inner_vlan = true
+    encapsulate_inner_vlan        = true
+    ingress_node_replication      = true
+    unreachable_vtep_aging_timer  = 900
   }
 }
 

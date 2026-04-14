@@ -66,6 +66,8 @@ The following arguments are supported:
     Extend VNI to EVPN.
   - **encapsulate_inner_vlan** (Optional, Boolean)  
     Retain inner VLAN in the packet.
+  - **decapsulate_accept_inner_vlan** (Optional, Boolean)
+    Accept VXLAN packets with inner VLAN
   - **ingress_node_replication** (Optional, Boolean)  
     Enable ingress node replication.
   - **multicast_group** (Optional, String)  
