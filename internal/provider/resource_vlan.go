@@ -259,6 +259,13 @@ func (rsc *vlan) Schema(
 							tfvalidator.BoolTrue(),
 						},
 					},
+					"decapsulate_accept_inner_vlan": schema.BoolAttribute{
+						Optional:    true,
+						Description: "Accept VXLAN packets with inner VLAN",
+						Validators: []validator.Bool{
+							tfvalidator.BoolTrue(),
+						},
+					},
 					"encapsulate_inner_vlan": schema.BoolAttribute{
 						Optional:    true,
 						Description: "Retain inner VLAN in the packet.",
@@ -371,27 +378,29 @@ func (config *vlanConfig) isEmpty() bool {
 }
 
 type vlanBlockVxlan struct {
-	Vni                       types.Int64    `tfsdk:"vni"`
-	VniExtendEvpn             types.Bool     `tfsdk:"vni_extend_evpn"`
-	EncapsulateInnerVlan      types.Bool     `tfsdk:"encapsulate_inner_vlan"`
-	IngressNodeReplication    types.Bool     `tfsdk:"ingress_node_replication"`
-	MulticastGroup            types.String   `tfsdk:"multicast_group"`
-	OvsdbManaged              types.Bool     `tfsdk:"ovsdb_managed"`
-	StaticRemoteVtepList      []types.String `tfsdk:"static_remote_vtep_list"`
-	TranslationVni            types.Int64    `tfsdk:"translation_vni"`
-	UnreachableVtepAgingTimer types.Int64    `tfsdk:"unreachable_vtep_aging_timer"`
+	Vni                        types.Int64    `tfsdk:"vni"`
+	VniExtendEvpn              types.Bool     `tfsdk:"vni_extend_evpn"`
+	EncapsulateInnerVlan       types.Bool     `tfsdk:"encapsulate_inner_vlan"`
+	DecapsulateAcceptInnerVlan types.Bool     `tfsdk:"decapsulate_accept_inner_vlan"`
+	IngressNodeReplication     types.Bool     `tfsdk:"ingress_node_replication"`
+	MulticastGroup             types.String   `tfsdk:"multicast_group"`
+	OvsdbManaged               types.Bool     `tfsdk:"ovsdb_managed"`
+	StaticRemoteVtepList       []types.String `tfsdk:"static_remote_vtep_list"`
+	TranslationVni             types.Int64    `tfsdk:"translation_vni"`
+	UnreachableVtepAgingTimer  types.Int64    `tfsdk:"unreachable_vtep_aging_timer"`
 }
 
 type vlanBlockVxlanConfig struct {
-	Vni                       types.Int64  `tfsdk:"vni"`
-	VniExtendEvpn             types.Bool   `tfsdk:"vni_extend_evpn"`
-	EncapsulateInnerVlan      types.Bool   `tfsdk:"encapsulate_inner_vlan"`
-	IngressNodeReplication    types.Bool   `tfsdk:"ingress_node_replication"`
-	MulticastGroup            types.String `tfsdk:"multicast_group"`
-	OvsdbManaged              types.Bool   `tfsdk:"ovsdb_managed"`
-	StaticRemoteVtepList      types.Set    `tfsdk:"static_remote_vtep_list"`
-	TranslationVni            types.Int64  `tfsdk:"translation_vni"`
-	UnreachableVtepAgingTimer types.Int64  `tfsdk:"unreachable_vtep_aging_timer"`
+	Vni                        types.Int64  `tfsdk:"vni"`
+	VniExtendEvpn              types.Bool   `tfsdk:"vni_extend_evpn"`
+	EncapsulateInnerVlan       types.Bool   `tfsdk:"encapsulate_inner_vlan"`
+	DecapsulateAcceptInnerVlan types.Bool   `tfsdk:"decapsulate_accept_inner_vlan"`
+	IngressNodeReplication     types.Bool   `tfsdk:"ingress_node_replication"`
+	MulticastGroup             types.String `tfsdk:"multicast_group"`
+	OvsdbManaged               types.Bool   `tfsdk:"ovsdb_managed"`
+	StaticRemoteVtepList       types.Set    `tfsdk:"static_remote_vtep_list"`
+	TranslationVni             types.Int64  `tfsdk:"translation_vni"`
+	UnreachableVtepAgingTimer  types.Int64  `tfsdk:"unreachable_vtep_aging_timer"`
 }
 
 func (rsc *vlan) ValidateConfig(
@@ -747,6 +756,9 @@ func (rscData *vlanData) set(
 		if rscData.Vxlan.EncapsulateInnerVlan.ValueBool() {
 			configSet = append(configSet, setPrefix+"vxlan encapsulate-inner-vlan")
 		}
+		if rscData.Vxlan.DecapsulateAcceptInnerVlan.ValueBool() {
+			configSet = append(configSet, setPrefix+"vxlan decapsulate-accept-inner-vlan")
+		}
 		if rscData.Vxlan.IngressNodeReplication.ValueBool() {
 			configSet = append(configSet, setPrefix+"vxlan ingress-node-replication")
 		}
@@ -859,6 +871,8 @@ func (rscData *vlanData) read(
 					}
 				case itemTrim == "encapsulate-inner-vlan":
 					rscData.Vxlan.EncapsulateInnerVlan = types.BoolValue(true)
+				case itemTrim == "decapsulate-accept-inner-vlan":
+					rscData.Vxlan.DecapsulateAcceptInnerVlan = types.BoolValue(true)
 				case itemTrim == "ingress-node-replication":
 					rscData.Vxlan.IngressNodeReplication = types.BoolValue(true)
 				case balt.CutPrefixInString(&itemTrim, "multicast-group "):
